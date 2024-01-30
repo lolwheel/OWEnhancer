@@ -52,9 +52,8 @@ Or follow these instructions below:
 5. Prepare your Wemos D1 Mini and BMS:
    1. Tin 4 consecutive pins on Wemos D1 Mini marked as **TX, RX, D1, D2** as well as **5v, GND** pins.
    2. Solder a small wire **on the top of the board** connecting the pin marked as **TX** to the pin marked as **D2**
-   3. Solder power pickup wires to the BMS. The JWFFM chip installation video demonstrates this well - [YouTube: Power pickup from BMS](https://youtu.be/kSWicH8hUFo?t=1028)
+   3. Solder power pickup wires to the BMS.
    4. Cut the **WHITE** and **GREEN** wires from the three-wire connector around 3/4 of an inch from the connector. Wrap the Green wire **leading to the BMS**(the 3/4 inch stub) in an isolating wire as we won't be needing it. Tin the other three wire endings, you'll be soldering those to the Wemos D1 Mini.
-      Again, JWFFM install video has a good demonstration of this: [YouTube: Cutting GREEN and WHITE wires](https://youtu.be/kSWicH8hUFo?t=453)
 6. Connecting wires to your Wemos D1 Mini. I found it much easier to solder these to the bottom of the board:
    1. Connect the **GROUND** wire from the **BMS**, the middle wire out of the BMS 5 pin connector to **GND** on Wemos D1.
    2. Connect the **5v** wire, the other one from BMS to the **5v** on the board.
