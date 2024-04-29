@@ -19,6 +19,10 @@ This is a hobby project for its contributors and comes with absolutely no guaran
 - Supports future firmware updates via WiFi - no need to reopen your board.
 - Adds password protection to your board
 
+# Discussion Group
+
+[https://www.facebook.com/groups/732443145770290](https://www.facebook.com/groups/732443145770290)
+
 # Installing Owie into your board
 
 ## Prerequisites:
