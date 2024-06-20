@@ -1,6 +1,8 @@
 # Owie
 
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/lolwheel/Owie)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/mretich/Owie)
+
+Originally based on code by [lolwheel/Owie](https://github.com/lolwheel/Owie), and now somewhat maintained here.
 
 This project unlocks battery expansion possibilities on otherwise locked OneWheels, adds WiFi-based monitoring of various battery health signals such as individual cell voltages, current, etc.
 
@@ -31,40 +33,87 @@ This is a hobby project for its contributors and comes with absolutely no guaran
 - Be comfortable with opening your board's battery enclosure.
   - For the PINT you require a somewhat exotic Torx 5-point security bit, size TS20. [Amazon link](https://www.amazon.com/gp/product/B07TC79LVH)
   - For the XR+ you will need a 3/32" Allen key. [Amazon link](https://www.amazon.com/dp/B0000CBJE1)
-- Wemos D1 Mini Lite - the cheapest and most compact ESP8266 board that I'm aware of. You can find those on Aliexpress and Amazon. Buy version without the metal shield or ceramic WiFi antenna on it as they're too bulky to fit inside of the battery enclosure. [5 pack Amazon Link](https://www.amazon.com/dp/B081PX9YFV).
+- Wemos D1 Mini Lite - the cheapest and most compact ESP8266 board that I'm aware of. You can find those on Aliexpress and Amazon.
+    - [5 pack Amazon Link for $14.69](https://www.amazon.com/dp/B081PX9YFV)
+    - [6 pack Amazon Link for $15.99](https://www.amazon.com/dp/B08C7FYM5T)
 
 ## Flashing Owie for the first time
 
-1. Download the latest [`firmware.bin`](https://github.com/lolwheel/Owie/releases/latest/download/firmware.bin).
+1. Download the latest [`firmware.bin`](https://github.com/mretich/Owie/releases/latest/download/firmware.bin).
 2. Follow the instruction on the ESP WebTools page [here](https://ow-breaker.github.io/). Note that firmware flashed through this website might be older than the latest official release. To make sure that you're running the latest version, follow the instructions in the "Updating Owie" section below after the initial flash.
 3. Verify the flash success: When the chip is on, you should see
    a WiFi network called `Owie-XXXX`. Connecting to it should send you straight to the status page of the Owie board. Don't worry about the data because the board isn't hooked up yet.
 
 ## Installation into the board:
 
+### Community Video
+
 NEW: Follow this step-by-step installation video made by one of the community members - https://www.youtube.com/watch?v=HhKdwnYUbA0
 
-Or follow these instructions below:
+### Instructional Breakdown
+
+
+#### Soldering points:
+
+<img src= "docs/img/wemos_d1_top.png?raw=true" height="180px">
+<img src="docs/img/wemos_d1_bottom.png?raw=true" height="180px">
+
+<img src="docs/img/bms_power.png?raw=true" height="180px">
+
+#### Installation Instructions:
 
 1. Install Owie firmware onto your Wemos D1 mini as instructed above.
-2. NEW: I highly recommend physically removing the reset button from the chip with pliers to exclude possibility of it accidentally getting pressed while inside of your OneWheel.
-3. Disassemble your board and open the battery enclosure.
-4. Disconnect all wires from BMS, strictly in the following order:
+
+OPTIONAL: If space is an issue, it is also possible to carefully pinch and remove the silver metal cover on the D1 Mini. The first photo shows where it is possible to carefully pinch, and the second shows the removed cover.
+
+<img src= "docs/img/wemos_d1_removed_cover_1.png?raw=true" height="180px" />
+<img src= "docs/img/wemos_d1_removed_cover_2.png?raw=true" height="180px" />
+
+OPTIONAL: I highly recommend physically removing the reset button from the chip with pliers to exclude possibility of it accidentally getting pressed while inside of your OneWheel.
+
+<img src= "docs/img/wemos_d1_reset_button.png?raw=true" height="180px">
+    
+2. Disassemble your board and open the battery enclosure.
+
+3. Disconnect all wires from BMS, strictly in the following order (for a stock BMS). :
    1. Battery balance lead - the leftmost connector (24 wires) on the BMS.
    2. Battery main lead - an XT60 connector on the rightmost side of the BMS.
    3. All the other wires to the BMS, the order here doesn't matter.
-5. Prepare your Wemos D1 Mini and BMS:
-   1. Tin 4 consecutive pins on Wemos D1 Mini marked as **TX, RX, D1, D2** as well as **5v, GND** pins.
-   2. Solder a small wire **on the top of the board** connecting the pin marked as **TX** to the pin marked as **D2**
-   3. Solder power pickup wires to the BMS.
+
+Note that for aftermarket BMS's and batteries, the order of harness disconnection may be different. Please review your aftermarket battery and/or BMS instructions to see if they differ.
+
+4. Prepare your Wemos D1 Mini and BMS:
+   1. Solder power pickup wires to the BMS.
+
+<img src= "docs/img/wemos_d1_power.png?raw=true" height="180px">
+
+   2. Tin 4 consecutive pins on Wemos D1 Mini marked as **TX, RX, D1, D2** as well as **5v, GND** pins.
+   3. Solder a small wire **on the top of the board** connecting the pin marked as **TX** to the pin marked as **D2**
+
+<img src= "docs/img/wemos_d1_tinned.png?raw=true" height="180px">
+
    4. Cut the **WHITE** and **GREEN** wires from the three-wire connector around 3/4 of an inch from the connector. Wrap the Green wire **leading to the BMS**(the 3/4 inch stub) in an isolating wire as we won't be needing it. Tin the other three wire endings, you'll be soldering those to the Wemos D1 Mini.
-6. Connecting wires to your Wemos D1 Mini. I found it much easier to solder these to the bottom of the board:
+
+<img src= "docs/img/harness_comms_cut.png?raw=true" height="180px">
+
+5. Connecting wires to your Wemos D1 Mini. I found it much easier to solder these to the bottom of the board:
    1. Connect the **GROUND** wire from the **BMS**, the middle wire out of the BMS 5 pin connector to **GND** on Wemos D1.
    2. Connect the **5v** wire, the other one from BMS to the **5v** on the board.
+
+<img src= "docs/img/wemos_d1_power.png?raw=true" height="180px">
+
    3. Connect the **WHITE** wire **RUNNING TO THE MAIN BOARD** to the **TX** pin on the board.
    4. Connect the **GREEN** wire **RUNNING TO THE MAIN BOARD** to the **D1** pin on the board.
+
+<img src= "docs/img/wemos_d1_white_green.png?raw=true" height="180px">
+
    5. Connect the **WHITE** stubby wire running to the **BMS** to the **RX** pin on the board.
+
+<img src= "docs/img/wemos_d1_white.png?raw=true" height="180px">
+
    6. Cover the bottom of the Wemos D1 mini with either fish tape or isolating tape so that none of the exposed soldering joints have any chance of contacting anything on the BMS. I also put a bunch of tape on the top of the board, just in case.
+
+<img src= "docs/img/wemos_d1_covered.png?raw=true" height="180px">
 
 DONE!
 
@@ -73,16 +122,6 @@ DONE!
 ### Board reporting battery at 1% after install
 
 If after installing OWIE into your board it reports that your battery is at 1% even though it shouldn't, plug your board into a charger. This problem occurs because the BMS goes through a state reset and doesn't know the status of the battery, and plugging the board into a charger corrects this issue by forcing the BMS (and controller potentially) to do a state check.
-
-Pictures demonstrating soldering points on the board:
-
-<img src= "docs/img/wemos_d1_top.png?raw=true" height="180px">
-
-<img src="docs/img/wemos_d1_bottom.png?raw=true" height="180px">
-
-How it looks in my setup:
-
-<img src="docs/img/wemos_d1_installed.jpg" height="180px">
 
 # Board Locking functionality
 
