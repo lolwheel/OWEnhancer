@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- The HTML markup is based on the main page of Tasmota -->
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
@@ -9,12 +7,13 @@
   <title>Owie update</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-
-<body>
-  <div style="text-align:left;display:inline-block;color:#eaeaea;min-width:340px;">
-    <div id="statusHeader" style="text-align:center;color:#eaeaea;margin-bottom:10px;">
-      <h2>Success - rebooting...</h2>
-      <h2>IMPORTANT: keep the board powered on until Owie WiFi becomes available again!</h2>
+<body class="owie-app">
+  <div class="main">
+    <div class="settings content-container" style="display: block !important;">
+      <div class="wrapper" style="color: green; text-align: center;">
+        <h2>Success - rebooting...</h2>
+        <h2>IMPORTANT: keep the board powered on until Owie WiFi becomes available again!</h2>
+      </div>
     </div>
   </div>
 </body>

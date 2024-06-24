@@ -1,0 +1,16 @@
+{
+    "html": {
+         "removeAttributeQuotes": false,
+         "removeOptionalTags": false,
+         "removeRedundantAttributes": false
+    },
+    "css": {
+        "compatibility": "*"
+    },
+    "js": {
+        "ecma": 6
+    },
+    "img": {
+        "maxSize": 4096
+    }
+}

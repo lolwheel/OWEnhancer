@@ -1,126 +1,466 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- The HTML markup is based on the main page of Tasmota -->
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-    <title>Owie - Status</title>
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <title>Owie</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            function reloadData() {
-                const xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", function (evt) {
-                    var parsed = JSON.parse(evt.target.responseText);
-                    for (const key in parsed) {
-                        var el = document.getElementById(key);
-                        if (el) {
-                            el.innerHTML = parsed[key];
-                        }
-                    }
-                    setTimeout(reloadData, 100);
-                });
-                xhr.open("GET", "/autoupdate");
-                xhr.send();
-            }
-            reloadData();
-            const unlockBtn = document.getElementById("unlockButton");
-            if (!unlockBtn.dataset.locked) {
-                return;
-            }
-            unlockBtn.onclick = () => {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", "/lock?unlock");
-                xhr.responseType = "text";
-                xhr.onload = () => {
-                    if (xhr.status === 200) {
-                        unlockBtn.innerHTML = "Unlocked! Restart your board to ride it.";
-                    } else {
-                        unlockBtn.innerHTML = "Error: " + xhr.status;
-                    }
-                };
-                unlockBtn.setAttribute("disabled", "1");
-                xhr.send();
-            };
-            unlockBtn.removeAttribute("style");
-        });
-    //# sourceURL=index.js
-    </script>
 </head>
-
-<body>
-    <div style="text-align:left;display:inline-block;color:#eaeaea;min-width:340px;">
-        <div id="statusHeader" style="text-align:center;color:#eaeaea;margin-bottom:10px;">
-            <h2>Owie Status</h2>
-            (%DISPLAY_AP_NAME%)
+<body class="owie-app">
+<div class="main">
+    <div class="startup">
+        <div class="content">
+            <div class="lds-spinner">
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
+            </div>
+            <div class="loading-text">Loading Owie Frontend...</div>
         </div>
-        <div id="content">
-            <table>
-                <tr>
-                    <th>Battery Voltage</th>
-                    <td id="TOTAL_VOLTAGE">%TOTAL_VOLTAGE%v</td>
-                </tr>
-                <tr>
-                    <th>Current</th>
-                    <td id="CURRENT_AMPS">%CURRENT_AMPS% Amps</td>
-                </tr>
-                <tr>
-                    <th>BMS reported SOC:</th>
-                    <td id="BMS_SOC">%BMS_SOC%%%</td>
-                </tr>
-                <tr>
-                    <th>Overridden SOC:</th>
-                    <td id="OVERRIDDEN_SOC">%OVERRIDDEN_SOC%%%</td>
-                </tr>
-                <tr>
-                    <th>Used charge:</th>
-                    <td id="USED_CHARGE_MAH">%USED_CHARGE_MAH% mAh</td>
-                </tr>
-                <tr>
-                    <th>Regen:</th>
-                    <td id="REGENERATED_CHARGE_MAH">%REGENERATED_CHARGE_MAH% mAh</td>
-                </tr>
-                <tr>
-                    <th>Uptime:</th>
-                    <td id="UPTIME">%UPTIME%</td>
-                </tr>
-                <tr>
-                    <th>Power cycles:</th>
-                    <td>%GRACEFUL_SHUTDOWN_COUNT%</td>
-                </tr>
-                <tr>
-                    <th>Cell voltages</th>
-                    <td>
-                        <table class="cell-voltages" id="CELL_VOLTAGE_TABLE">%CELL_VOLTAGE_TABLE%</table>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Battery/BMS Temps</th>
-                    <td>
-                        <table class="cell-voltages" id="TEMPERATURE_TABLE">%TEMPERATURE_TABLE%</table>
-                    </td>
-                </tr>
-            </table>
-            <hr>
-            <p></p>
-            <form action="/battery">
-                <button>Battery</button>
-            </form>
-            <p></p>
-            <form action="/settings">
-                <button>Settings</button>
-            </form>
-            <p></p>
-            <button style="display:none" id="unlockButton" data-locked="%IS_LOCKED%">
-                Unlock Board
-            </button>
-        </div>
-        <div id="version" style="text-align:right;font-size:11px;">
-            <hr>
-            <p style="color:#aaa;">Owie <span id="OWIE_version">%OWIE_version%</span></p>
+        
+    </div>
+    <div class="toaster" id="toaster">
+        <span class="closebtn" id="toaster-close" onclick="this.parentElement.classList.remove('show');">&times;</span>
+        <div id="alert-msg" style='text-align:center'></div>
+    </div>
+    <!-- Settings container -->
+    <div id="settings" class="settings content-container">
+        <div class="wrapper">
+            <div class="wifi-settings header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M12 12C9.97 12 8.1 12.67 6.6 13.8L4.8 11.4C6.81 9.89 9.3 9 12 9S17.19 9.89 19.2 11.4L18.74 12C17.66 12.05 16.63 12.33 15.73 12.81C14.6 12.29 13.33 12 12 12M21 9L22.8 6.6C19.79 4.34 16.05 3 12 3S4.21 4.34 1.2 6.6L3 9C5.5 7.12 8.62 6 12 6S18.5 7.12 21 9M12 15C10.65 15 9.4 15.45 8.4 16.2L12 21L12.22 20.71C12.08 20.16 12 19.59 12 19C12 17.57 12.43 16.24 13.17 15.13C12.79 15.05 12.4 15 12 15M23.8 20.4C23.9 20.4 23.9 20.5 23.8 20.6L22.8 22.3C22.7 22.4 22.6 22.4 22.5 22.4L21.3 22C21 22.2 20.8 22.3 20.5 22.5L20.3 23.8C20.3 23.9 20.2 24 20.1 24H18.1C18 24 17.9 23.9 17.8 23.8L17.6 22.5C17.3 22.4 17 22.2 16.8 22L15.6 22.5C15.5 22.5 15.4 22.5 15.3 22.4L14.3 20.7C14.2 20.6 14.3 20.5 14.4 20.4L15.5 19.6V18.6L14.4 17.8C14.3 17.7 14.3 17.6 14.3 17.5L15.3 15.8C15.4 15.7 15.5 15.7 15.6 15.7L16.8 16.2C17.1 16 17.3 15.9 17.6 15.7L17.8 14.4C17.8 14.3 17.9 14.2 18.1 14.2H20.1C20.2 14.2 20.3 14.3 20.3 14.4L20.5 15.7C20.8 15.8 21.1 16 21.4 16.2L22.6 15.7C22.7 15.7 22.9 15.7 22.9 15.8L23.9 17.5C24 17.6 23.9 17.7 23.8 17.8L22.7 18.6V19.6L23.8 20.4M20.5 19C20.5 18.2 19.8 17.5 19 17.5S17.5 18.2 17.5 19 18.2 20.5 19 20.5 20.5 19.8 20.5 19Z" />
+                </svg>
+                <span class="title">WiFi Settings</span>
+            </div>
+            <div class="wifi-settings content">
+                <form action="#" id="wifi-settings">
+                    <label for="wifi">Owie WiFi network name override:</label>
+                    <input name="apselfname" id="apselfname" placeholder="WiFi Name" value="" type="text">
+                    <label>WiFi Password</label>
+                    <div>
+                        <input name="pw" id="wifipw" value="" type="password">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" onclick="toggleWifiPwVisibility(this)" class="wifi-pw-visibility">
+                            <path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z" />
+                        </svg>                
+                    </div>
+                    <label for="wifi-power">Power (dBm):</label>
+                    <select name="wifipower" value="" id="wifi-power">
+                        <!-- will be generated by JS-->
+                    </select>
+                    <button id="wifi-submit" type="submit">Update WiFI Settings</button>
+                </form>
+            </div>
+            <div class="divider"></div>
+            <div class="board-locking header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M21,11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1L21,5V11M12,21C15.75,20 19,15.54 19,11.22V6.3L12,3.18L5,6.3V11.22C5,15.54 8.25,20 12,21M14.8,11V9.5C14.8,8.1 13.4,7 12,7C10.6,7 9.2,8.1 9.2,9.5V11C8.6,11 8,11.6 8,12.2V15.7C8,16.4 8.6,17 9.2,17H14.7C15.4,17 16,16.4 16,15.8V12.3C16,11.6 15.4,11 14.8,11M13.5,11H10.5V9.5C10.5,8.7 11.2,8.2 12,8.2C12.8,8.2 13.5,8.7 13.5,9.5V11Z" />
+                </svg>
+                <span class="title">Board Locking</span>
+            </div>
+            <div class="board-locking content" data-canenable="" data-enabled="">
+                <div class="bl-inactive">
+                    <span>This Feature is currently not activated!<br>Please set a WiFi-Password to activate this feature!</span>
+                </div>
+                <div class="bl-disabled hidden" >
+                    <span class="content">The Board Locking Feature is currently disabled.</span>
+                    <button onclick="toggleArmingBoard(true);">Enable locking</button>
+                </div>
+                <div class="bl-enabled hidden">
+                    <span>Locking is enabled!<br>To lock the board, turn it on and off in less than 5 seconds.</span>
+                    <button onclick="toggleArmingBoard(false);">Disable locking</button>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="firmware header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" />
+                </svg>
+                <span class="title">Firmware Update</span>
+            </div>
+            <div class="firmware content">
+                <div>
+                    <div class="update-upload-progress hidden">
+                        <div class="lds-spinner">
+                            <div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div>
+                        </div>
+                        <div class="update-text">File upload in progress... (0%)</div>
+                    </div>
+                    <input id="fwUpdInput" type="file" name="firmware" accept=".bin,.bin.gz" hidden>
+                    <button id="fwUpdBtn">Browse Firmware File (.bin, .bin.gz)</button>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="battery-status header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z" />
+                </svg>
+                <span class="title">Battery Info Reset</span>
+            </div>
+            <div class="battery-status content">
+                <div>
+                    <button class="battery-reset button" data-type="stats">Reset Stats</button>
+                    <button class="battery-reset button" data-type="settings">Reset Settings</button>
+                </div>
+            </div>
         </div>
     </div>
-</body>
+    <!-- Settings End -->
+    <!-- Owie Stats -->
+    <div id="stats" class="stats content-container">
+        <div class="wrapper">
+            <div class="stats header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z" />
+                </svg>
+                <span class="title">Owie Statistics</span>
+            </div>
+            <div class="stat-container">
+                <div><span class="owie-label">OWIE-VERSION</span></div>
+                <div class="stats-value"><span class="value-text owie-version-meta"></span><span
+                        class="owie-label value-label"></span></div>
+            </div>
+            <div class="stat-container">
+                <div><span class="owie-label">POWER CYCLES</span></div>
+                <div class="stats-value"><span class="value-text power-cycles-meta"></span><span
+                        class="owie-label value-label"></span></div>
+            </div>
+            <div class="stat-container">
+                <div><span class="owie-label">BMS SERIAL</span></div>
+                <div class="stats-value"><span class="value-text bms-serial-meta"></span><span
+                        class="owie-label value-label"></span></div>
+            </div>
+        </div>
+        <template id="stat-container-template">
+            <div class="stat-container">
+                <div><span class="owie-label"></span></div>
+                <div class="stats-value"><span class="value-text"></span><span
+                        class="owie-label value-label"></span></div>
+            </div>
+        </template>
+    </div>
+    <!-- Owie Stats End -->
+    <!-- Monitoring -->
+    <div id="monitor" class="monitor content-container">
+        <div class="wrapper">
+            <div class="monitor header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M13,19V16H21V19H13M8.5,13L2.47,7H6.71L11.67,11.95C12.25,12.54 12.25,13.5 11.67,14.07L6.74,19H2.5L8.5,13Z" />
+                </svg>
+                <span class="title">BMS Data Monitor</span>
+            </div>
+            <textarea readonly="1" id="term" cols="340" name="t1" wrap="off"></textarea>
+            <button id="startstop" onclick="Monitoring.connect();">Connect</button>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Period</th>
+                            <th>Deviation</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody class="package-stats"></tbody>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unknown Bytes</th>
+                            <th>Checksum Mismatches</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="unkown-bytes">0</td>
+                            <td class="checksum-mismatches">0</td>
+                        </tr>
+                    </tbody>
+                </table>    
+            </div>
+        </div>
+    </div>
+    <!-- Monitoring End -->
+    <!-- Dev WiFi Setting -->
+    <div id="wifi" class="dev-wifi content-container">
+        <div class="wrapper">
+            <div class="dev-wifi header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                    <path d="M12 20L8.4 15.2C9.4 14.45 10.65 14 12 14S14.6 14.45 15.6 15.2L12 20M4.8 10.4L6.6 12.8C8.1 11.67 9.97 11 12 11S15.9 11.67 17.4 12.8L19.2 10.4C17.19 8.89 14.7 8 12 8S6.81 8.89 4.8 10.4M12 2C7.95 2 4.21 3.34 1.2 5.6L3 8C5.5 6.12 8.62 5 12 5S18.5 6.12 21 8L22.8 5.6C19.79 3.34 16.05 2 12 2M7 24H9V22H7V24M15 24H17V22H15V24M11 24H13V22H11V24Z" />
+                </svg>
+                <span class="title">WiFi (Development)</span>
+            </div>
+            <form action="#" id="wifi-dev">
+                <label for="wifi-dev-name">WiFi Network to connect to:</label>
+                <input id="wifi-dev-name" name="s" placeholder="WiFi Network" value="" type="text">
+                <label>WiFi Password</label>
+                <div>
+                    <input name="p" id="wifi-dev-pw" value="" type="password">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" onclick="toggleWifiPwVisibility(this)" class="wifi-pw-visibility">
+                        <path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z" />
+                    </svg>
+                </div>
+                <button id="wifi-dev-submit" type="submit">Update WiFi</button>
+            </form>
+        </div>
+    </div>
+    <!-- Dev WiFi Setting End -->
+    <div id="home" class="home content-container">
+        <div class="boardlocking-enabled">
+            <div class="unlock-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M21 11C21 16.5 17.2 21.7 12 23C6.8 21.7 3 16.5 3 11V5L12 1L21 5V11M12 21C15.8 20 19 15.5 19 11.2V6.3L12 3.2L5 6.3V11.2C5 15.5 8.2 20 12 21M14.8 11H10.5V8.5C10.5 7.7 11.2 7.2 12 7.2S13.5 7.7 13.5 8.5V9H14.8V8.5C14.8 7.1 13.4 6 12 6S9.2 7.1 9.2 8.5V11C8.6 11 8 11.6 8 12.2V15.7C8 16.4 8.6 17 9.2 17H14.7C15.4 17 16 16.4 16 15.8V12.3C16 11.6 15.4 11 14.8 11Z"></path>
+                </svg>
+            </div>
+            <div class="unlocking-text owie-label">Unlock Your Board</div>
+        </div>
+        <div class="owie-loading-bars">
+            <div class="progress owie">
+                <div class="progress-text">
+                    <div class="box">
+                        <div class="loading-percentage">%</div>
+                    </div>
+                    <div class="box">
+                        <div class="loading-name"></div>
+                    </div>
+                    <div class="box">
+                        <div class="loading-icon battery hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="loading-icon outlet hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.66C6,21.4 6.6,22 7.33,22H16.66C17.4,22 18,21.4 18,20.67V5.33C18,4.6 17.4,4 16.67,4M11,20V14.5H9L13,7V12.5H15" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="progress__bar" style="width: var(--owie-percentage)"></div>
+            </div>
+            <div class="loading-spacer"></div>
+            <div class="progress bms">
+                <div class="progress-text">
+                    <div class="box">
+                        <div class="loading-percentage">%</div>
+                    </div>
+                    <div class="box">
+                        <div class="loading-name">BMS</div>
+                    </div>
+                    <div class="box">
+                        <div class="loading-icon battery hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="loading-icon outlet hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.66C6,21.4 6.6,22 7.33,22H16.66C17.4,22 18,21.4 18,20.67V5.33C18,4.6 17.4,4 16.67,4M11,20V14.5H9L13,7V12.5H15" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="progress bms bar_overlay">
+                <div class="progress-text">
+                    <div class="box">
+                        <div class="loading-percentage">%</div>
+                    </div>
+                    <div class="box">
+                        <div class="loading-name">BMS</div>
+                    </div>
+                    <div class="box">
+                        <div class="loading-icon battery hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="loading-icon outlet hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.66C6,21.4 6.6,22 7.33,22H16.66C17.4,22 18,21.4 18,20.67V5.33C18,4.6 17.4,4 16.67,4M11,20V14.5H9L13,7V12.5H15" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="owie-current">
+            <div class="current-content flex">
+                <div>
+                    <div class="current-gauge">
+                        <div class="progress-gauge regen">
+                            <div class="barOverflow">
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+                        <div class="gauge-separator"></div>
+                        <div class="progress-gauge current">
+                            <div class="barOverflow">
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="current-text" style="margin-top: -38px;">
+                        <span class="value-text">5.02</span><span class="owie-label value-label"> A</span>
+                        <div class="current-header"><span class="owie-label">CURRENT</span></div>
+                    </div>
 
+
+                </div>
+                <div class="voltage">
+                    <div class="voltage-text">
+                        <span class="value-text">60.03</span><span class="owie-label value-label"> V</span>
+                    </div>
+                    <div class="current-header"><span class="owie-label">VOLTAGE</span></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div onclick="toggleBatteryInfo()" class="battery-statistics header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                <path d="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z" />
+            </svg>
+            <span class="title">BATTERY STATUS: <span class="battery-severity">OK</span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon chevron">
+                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+        </div>
+        <div class="battery-content">
+            <div class="battery-info-content flex">
+                <div class="battery-pack">
+                    <div class="flex table-container">
+                        <!-- TODO: maybe this should be refactored to a template -->
+                        <template id="battery-cell-template">
+                            <div class="cell">
+                                <div class="gg-battery-empty">
+                                    <div class="battery-voltage-text">0.00</div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="temperatures">
+                    <div class="flex" style="justify-content: center">
+                        <div class="temp-item" id="temp-sensor1">
+                            <div class="temperature-gauge">
+                                <div class="temperature-gauge__bar good" style="width: 80%;"></div>
+                            </div>
+                            <div><span class="value-text">0</span><span class="owie-label value-label">&deg;C</span></div>
+                        </div>
+                        <div class="temp-item" id="temp-sensor2">
+                            <div class="temperature-gauge">
+                                <div class="temperature-gauge__bar good" style="width: 30%"></div>
+                            </div>
+                            <div><span class="value-text">0</span><span class="owie-label value-label">&deg;C</span></div>
+                        </div>
+                        <div class="temp-item" id="temp-sensor3">
+                            <div class="temperature-gauge">
+                                <div class="temperature-gauge__bar good" style="width: 30%"></div>
+                            </div>
+                            <div><span class="value-text">0</span><span class="owie-label value-label">&deg;C</span></div>
+                        </div>
+                        <div class="temp-item" id="temp-sensor4">
+                            <div class="temperature-gauge">
+                                <div class="temperature-gauge__bar good" style="width: 30%"></div>
+                            </div>
+                            <div><span class="value-text">0</span><span class="owie-label value-label">&deg;C</span></div>
+                        </div>
+                        <div class="temp-item" id="temp-sensor5">
+                            <div class="temperature-gauge">
+                                <div class="temperature-gauge__bar good" style="width: 30%"></div>
+                            </div>
+                            <div><span class="value-text">0</span><span class="owie-label value-label">&deg;C</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="divider"></div>
+        <div class="session-statistics header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+                <path d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z" />
+            </svg>
+            <span class="title">SESSION STATISTICS</span>
+        </div>
+        <div class="usage-statistics flex">
+            <div class="
+            ">
+                <div class="statistics-header"><span class="owie-label">UPTIME</span></div>
+                <div class="statistics-text uptime">
+                    <span class="value-text">00:00</span>
+                </div>
+
+            </div>
+            <div class="usage">
+                <div class="statistics-header"><span class="owie-label">USAGE</span></div>
+                <div class="statistics-text usage">
+                    <span class="value-text">0</span><span class="owie-label value-label"> mAh</span>
+                </div>
+            </div>
+            <div class="regen">
+                <div class="statistics-header"><span class="owie-label">REGEN</span></div>
+                <div class="statistics-text regen">
+                    <span class="value-text">0</span><span class="owie-label value-label"> mAh</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar" id="navbar">
+        <div class="default active">
+            <a href="#home">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="navbar-icon">
+                    <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+                </svg>
+                <div class="menu-text">Home</div>
+            </a>
+            <!--        <a href="javascript:void(0)" class="closebtn" onclick="document.getElementById('nav').style.opacity = '0'">&times;</a>-->
+            <a href="#settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="navbar-icon">
+                    <path d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z" />
+                </svg>
+                <div class="menu-text">Settings</div>
+            </a>
+            <a href="#stats">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="navbar-icon">
+                    <path d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z" />
+                </svg>
+                <div class="menu-text">Stats</div>
+            </a>
+            <a href="javascript:void(0);" class="icon" onclick="toggleResponsiveNav()">&#9776;</a>
+        </div>
+        <div class="settings">
+            <a href="#home">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="navbar-icon">
+                    <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+                </svg>
+                <div class="menu-text">Home</div>
+            </a>
+            <a href="#monitor">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="navbar-icon">
+                    <path d="M13,19V16H21V19H13M8.5,13L2.47,7H6.71L11.67,11.95C12.25,12.54 12.25,13.5 11.67,14.07L6.74,19H2.5L8.5,13Z" />
+                </svg>
+                <div class="menu-text">Monitor BMS</div>
+            </a>
+            <a href="#wifi">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="navbar-icon">
+                    <path d="M12 20L8.4 15.2C9.4 14.45 10.65 14 12 14S14.6 14.45 15.6 15.2L12 20M4.8 10.4L6.6 12.8C8.1 11.67 9.97 11 12 11S15.9 11.67 17.4 12.8L19.2 10.4C17.19 8.89 14.7 8 12 8S6.81 8.89 4.8 10.4M12 2C7.95 2 4.21 3.34 1.2 5.6L3 8C5.5 6.12 8.62 5 12 5S18.5 6.12 21 8L22.8 5.6C19.79 3.34 16.05 2 12 2M7 24H9V22H7V24M15 24H17V22H15V24M11 24H13V22H11V24Z" />
+                </svg>
+                <div class="menu-text">WiFi Configuration (Dev)</div>
+            </a>
+            <a href="javascript:void(0);" class="icon" onclick="toggleResponsiveNav()">&#9776;</a>
+        </div>
+        <div class="owie-version">Owie - <span class="owie-version-meta"></span></div>
+    </div>
+</div>
+<script src="owie.js"></script>
+</body>
 </html>
+

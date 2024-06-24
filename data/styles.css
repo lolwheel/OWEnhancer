@@ -1,123 +1,1134 @@
-div,
-fieldset,
-input,
-select {
-    padding: 5px;
-    font-size: 1em;
-}
-
-fieldset {
-    background: #4f4f4f;
-}
-
-p {
-    margin: 0.5em 0;
-}
-
-input {
-    width: 100%;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    background: #dddddd;
-    color: #000000;
-}
-
-input[type=checkbox],
-input[type=radio] {
-    width: 1em;
-    margin-right: 6px;
-    vertical-align: -1px;
-}
-
-input[type=range] {
-    width: 99%;
-}
-
-select {
-    width: 100%;
-    background: #dddddd;
-    color: #000000;
-}
-
-textarea {
-    resize: vertical;
-    width: 98%;
-    height: 318px;
-    padding: 5px;
-    overflow: auto;
-    background: #1f1f1f;
-    color: #65c115;
+/* remove most of the browser presets and add defaults */
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-    text-align: center;
-    font-family: verdana, sans-serif;
-    background: #252525;
+    margin: 0;
 }
 
-td {
-    padding: 0px;
+* {
+    box-sizing: inherit;
 }
 
-button {
-    border: 0;
-    border-radius: 0.3rem;
-    background: #1fa3ec;
-    color: #faffff;
-    line-height: 2.4rem;
-    font-size: 1.2rem;
+/* start owie css */
+
+html,
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.flex {
+    display: -ms-flexbox;
+    display: flex;
+    margin-left: -0.6em;
+    width: calc(100% + 0.6em);
+    flex-wrap: wrap;
+    transition: all 0.3s ease;
+}
+
+.flex > * {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    /* Default for IE10 bug */
+    padding-left: 0.6em;
+    padding-bottom: 0.6em;
+}
+
+.flex[class*=one] > *, .flex[class*=two] > *, .flex[class*=three] > *, .flex[class*=four] > *, .flex[class*=five] > *, .flex[class*=six] > *, .flex[class*=seven] > *, .flex[class*=eight] > *, .flex[class*=nine] > *, .flex[class*=ten] > *, .flex[class*=eleven] > *, .flex[class*=twelve] > * {
+    flex-grow: 0;
+}
+
+.flex.grow > * {
+    flex-grow: 1;
+}
+
+.one > * {
     width: 100%;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
+}
+
+.two > * {
+    width: 50%;
+}
+
+.three > * {
+    width: 33.33333%;
+}
+
+.four > * {
+    width: 25%;
+}
+
+.five > * {
+    width: 20%;
+}
+
+.six > * {
+    width: 16.66666%;
+}
+
+.seven > * {
+    width: 14.28571%;
+}
+
+.eight > * {
+    width: 12.5%;
+}
+
+.nine > * {
+    width: 11.11111%;
+}
+
+.ten > * {
+    width: 10%;
+}
+
+.eleven > * {
+    width: 9.09091%;
+}
+
+.twelve > * {
+    width: 8.33333%;
+}
+
+body {
+    margin: 0;
+    background-color: lightgrey;
+    font-family: Helvetica, sans-serif;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+body.dark {
+    background-color: black;
+}
+
+.owie-app {
+    --owie-percentage-int: 0;
+    --bms-percentage-int: 0;
+    --current: 0.0;
+    --max-current: 40;
+    --min-current: -20;
+    --owie-percentage: calc(var(--owie-percentage-int) / 100 * 100%);
+    --bms-percentage: calc(var(--bms-percentage-int) / 100 * 100%);
+    --text-color: #565656;
+    --bar-color: #68d0f7;
+    --background-color: whitesmoke;
+    --progress-background: white;
+}
+
+.owie-app.dark {
+    --text-color: whitesmoke;
+    --bar-color: #68d0f7;
+    --background-color: #565656;
+}
+
+.main {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-width: 100px;
+    max-width: 650px;
+    height: 100%;
+    overflow: hidden auto;
+    padding-bottom: 60px;
+}
+
+.header {
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    width: 100%;
+    flex: none;
+}
+
+.header .title {
+    margin-left: 10px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+
+.owie-loading-bars {
+    padding: 0;
+    margin: 0;
+
+}
+
+.progress {
+    width: 100%;
+    height: 50px;
+    display: block;
+    background-color: var(--progress-background);
+}
+
+.progress .progress__bar {
+    height: 100%;
+    width: 0;
+
+    transition: 0.3s;
+    margin-top: -50px
+}
+
+.progress.owie .loading-percentage::before {
+    counter-reset: prcnt var(--owie-percentage-int);
+    content: counter(prcnt);
+}
+
+.progress.bms {
+    color: lightgrey;
+}
+
+.progress.bms svg > path {
+    fill: lightgray;
+}
+
+.progress.bms.bar_overlay {
+    color: white;
+    background-color: lightgrey;
+    margin-top: -50px;
+    transition: clip-path 0.3s;
+    clip-path: polygon(0 0, calc(var(--bms-percentage)) 0, calc(var(--bms-percentage)) 100%, 0 100%);
+}
+
+.progress.bms .loading-percentage::before {
+    counter-reset: prcnt var(--bms-percentage-int);
+    content: counter(prcnt);
+}
+
+.progress.bms.bar_overlay svg > path {
+    fill: white;
+}
+
+.progress.owie .progress__bar {
+    background-color: var(--bar-color);
+}
+
+.progress > .progress-text {
+    height: 50px;
+    z-index: 3;
+    flex-flow: row;
+    display: flex;
+    font-size: 1.5em;
+    padding-top: 7px;
+}
+
+.progress > .progress-text .loading-name {
+    white-space: nowrap;
+}
+
+.progress > .progress-text .loading-percentage {
+    margin-right: auto;
+    padding-left: 5px;
+}
+
+.progress > .progress-text .loading-icon {
+    text-align: right;
+    margin-right: 5px;
+    margin-top: -2px;
+    margin-left: auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.loading-spacer {
+    height: 5px;
+}
+
+input.required {
+    border-color: red !important;
+}
+
+.owie-current {
+    margin-top: 77px;
+}
+
+.current-icon {
+    opacity: 0.1;
+    font-size: 1.5em;
+    padding-top: 50px;
+    padding-left: 30px;
+    display: inline-block;
+}
+
+.current-content {
+    margin-right: 0 !important;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+    margin-top: -60px;
+    justify-content: space-evenly;
+}
+
+.progress-gauge {
+    position: relative;
+    margin: 1px;
+    float: left;
+    text-align: center;
+    border-bottom: 1px;
+    width: 100%;
+}
+
+.progress-gauge > .barOverflow { /* Wraps the rotating .bar */
+    position: relative;
+    overflow: hidden; /* Comment this line to understand the trick */
+    width: 80px;
+    height: 80px; /* quater circle (overflow) */
+    margin-bottom: -14px; /* bring the numbers up */
+    margin-top: -5px;
+}
+
+.progress-gauge.current > .barOverflow {
+    transform: rotate(90deg);
+}
+
+.progress-gauge.regen > .barOverflow {
+    float: right;
+}
+
+.progress-gauge.current > .barOverflow > .bar {
+    transform: rotate(calc(45deg + (90deg * clamp(0.0, var(--current), var(--max-current)) / var(--max-current))));
+    transition: 0.3s;
+}
+
+.progress-gauge.regen > .barOverflow > .bar {
+    transform: rotate(calc(225deg - (90deg * clamp(var(--min-current), var(--current), 0.0) / var(--min-current))));
+    transition: 0.3s;
+}
+
+.bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 16px solid white;
+    border-bottom-color: var(--bar-color);
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.current-gauge {
+    display: flex;
+    flex-flow: row;
+}
+
+.owie-label {
+    font-weight: bold;
+    font-size: 1.2em;
+    opacity: 0.6;
+}
+
+.current-header {
+    padding-bottom: 10px;
+}
+
+.value-text {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.voltage-text {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 35px;
+}
+
+.value-label {
+    font-size: 1em;
+}
+
+.gauge-separator {
+    border: 1px solid var(--text-color);
+    height: 23px;
+    margin-bottom: -12px;
+    margin-top: -7px;
+}
+
+.usage-statistics > * {
+    display: inline-flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-width: 650px;
+    background-color: #565656;
+    height: 60px;
+}
+
+.voltage {
+    margin-top: -10px;
+}
+
+.boardlocking-enabled {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
+.boardlocking-disabled {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    text-align: center;
+}
+
+.boardlocking-enabled > .unlock-button {
+    height: 100px;
+    width: 100px;
+    border: 5px solid #565656;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0 0 0 rgba(104, 208, 247, 0.6);
+    animation: pulse 2s infinite;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(104, 208, 247, 0.6);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 20px rgba(104, 208, 247, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(104, 208, 247, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(104, 208, 247, 0.6);
+        box-shadow: 0 0 0 0 rgba(104, 208, 247, 0.6);
+    }
+    70% {
+        -moz-box-shadow: 0 0 0 20px rgba(104, 208, 247, 0);
+        box-shadow: 0 0 0 20px rgba(104, 208, 247, 0);
+    }
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(104, 208, 247, 0);
+        box-shadow: 0 0 0 0 rgba(104, 208, 247, 0);
+    }
+}
+
+.boardlocking-enabled > .unlock-button > svg {
+    height: 81px;
+    margin-top: 5px;
+}
+
+.boardlocking-enabled > .unlock-button > svg > path {
+    fill: #565656
+}
+
+@media screen and (max-height: 450px) {
+    .nav {
+        padding-top: 15px;
+    }
+
+    .nav a {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    .nav a {
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 215px) {
+    .nav a {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 170px) {
+    .nav a {
+        font-size: 18px;
+    }
+
+    .menu-text {
+        display: none
+    }
+}
+
+@media screen and (max-height: 450px) and (max-width: 170px) {
+    .nav {
+        padding-top: 60px;
+    }
+}
+
+.content-container {
+    position: relative;
+    display: none;
+    margin-bottom: 20px;
+}
+.content-container .header {
+    margin: 5px 0px 5px 5px;
+    letter-spacing: 2px;
+}
+
+.home {
+    padding-top: 5px;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.upload-btn-wrapper input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+/* The alert message box */
+.toaster {
+    visibility: hidden;
+    padding: 20px;
+    color: whitesmoke;
+    max-width: 650px;
+    position: absolute;
+    z-index: 999;
+    bottom: 0px;
+    width: 100%;
+    margin: 0px;
+    min-height: 75px;
+}
+
+/* The close button */
+.toaster > .closebtn {
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-button:hover {
-    background: #0e70a4;
+.error {
+    background-color: #f44336 !important;
 }
 
-.bgrn {
-    background: #47c266;
+.success {
+    background-color: rgb(4, 206, 4) !important;
 }
 
-.bgrn:hover {
-    background: #5aaf6f;
+.warning {
+    background-color: rgb(202, 111, 7) !important;
 }
 
-a {
-    color: #1fa3ec;
+.toaster.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {
+        bottom: -60px;
+        opacity: 0;
+    }
+    to {
+        bottom: 0px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: -60px;
+        opacity: 0;
+    }
+    to {
+        bottom: 0px;
+        opacity: 1;
+    }
+}
+
+.loading-icon svg {
+    height: 40px;
+}
+
+.loading-icon svg > path {
+    fill: var(--text-color);
+}
+
+.battery-statistics.header .content-icon {
+    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 1px;
+}
+
+.content-icon.chevron {
+    margin-left: auto;
+    margin-right: 15px;
+    margin-bottom: auto;
+    transition: 0.5s;
+}
+
+.battery-content {
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+}
+
+div.battery-statistics.open + div.battery-content {
+     max-height: 100%;
+}
+
+div.battery-statistics.open > svg.content-icon.chevron {
+    transform: rotate(-180deg);
+}
+
+.battery-info-content {
+    justify-content: center;
+    align-items: center;
+}
+
+.battery-container {
+    width: 360px;
+    padding: 0;
+}
+
+.battery-pack {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    width: 333px;
+    border-radius: 12px;
+    margin-left: 10px;
+    padding: 9px;
+}
+
+.battery-pack::after {
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 12px;
+    width: 20px;
+    height: 70px;
+    right: -20px;
+    top: 25px;
+    background-color: lightgrey;
+}
+
+.battery-pack td {
+    padding: 8px;
+}
+
+.gg-battery-empty {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    width: 50px;
+    height: 26px;
+    border-radius: 2px;
+    margin-left: -3px;
+    background-color: var(--bar-color);
+    box-shadow: lightgrey 3px 3px 10px;
+}
+
+.gg-battery-empty .battery-voltage-text {
+    text-align: center;
+    padding-top: 2px;
+}
+
+.gg-battery-empty::before {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 5px;
+    height: 12px;
+    right: -4px;
+    top: 7px;
+    background: var(--bar-color);
+    box-shadow: lightgrey 2px 2px 6px;
+}
+
+.temperatures {
+    padding: 11px 0 0 0;
+    margin-left: 5px;
+}
+
+.temp-item {
+    text-align: center;
+    max-width: 70px;
+}
+
+.temp-item .value-text {
+    font-size: 0.9em !important;
+    font-weight: normal;
+    text-align: center;
+}
+
+.temp-item .value-label {
+    font-size: 0.8em !important;
+}
+
+.temperature-gauge {
+    height: 6px;
+    background-color: white;
+    width: 60px;
+    display: block;
+    overflow: hidden;
+}
+
+.temperature-gauge__bar {
+    background-color: var(--bar-color);
+    display: block;
+    height: 6px;
+    transition: 0.3s ease;
+}
+
+.temperature-gauge__bar.warning {
+    background-color: orange;
+}
+
+.temperature-gauge__bar.error {
+    background-color: red;
+}
+
+.boardlocking-enabled {
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.firmware form {
+    height: 40px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 2px;
+    font-weight: bold;
+    background-color: var(--bar-color);
+}
+
+.firmware .update-upload-progress {
+    height: 167px;
+    display: block;
+    cursor: pointer;
+    margin: 30px 0;
+    align-items: center;
+    text-align: center;
+}
+
+.lds-spinner {
+    color: var(--bar-color);
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-spinner div {
+    transform-origin: 40px 40px;
+    animation: lds-spinner 1.2s linear infinite;
+}
+
+.lds-spinner div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 37px;
+    width: 6px;
+    height: 18px;
+    border-radius: 20%;
+    background: var(--bar-color);;
+}
+
+.lds-spinner div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -1.1s;
+}
+
+.lds-spinner div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -1s;
+}
+
+.lds-spinner div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.9s;
+}
+
+.lds-spinner div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.8s;
+}
+
+.lds-spinner div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.7s;
+}
+
+.lds-spinner div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.6s;
+}
+
+.lds-spinner div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.5s;
+}
+
+.lds-spinner div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.4s;
+}
+
+.lds-spinner div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.3s;
+}
+
+.lds-spinner div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.2s;
+}
+
+.lds-spinner div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.1s;
+}
+
+.lds-spinner div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+}
+
+@keyframes lds-spinner {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.content-icon {
+    width: 22px;
+    flex: none;
+}
+
+.content-icon path {
+    fill: var(--text-color);
+}
+
+.wrapper {
+    margin: 10px;
+}
+
+input[type=text], input[type=password], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.wifi-pw-visibility {
+    width: 26px;
+    position: absolute;
+    margin: 16px 0 0 -30px;
+}
+
+.wifi-pw-visibility path {
+    fill: var(--text-color);
+}
+
+.settings button {
+    width: 100%;
+    height: 40px;
+    background-color: var(--bar-color);
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: inherit;
+    border: 0px;
+    border-radius: 2px;
+}
+
+[class^="bl-"] {
+    text-align: center;
+}
+
+[class^="bl-"] span {
+    font-weight: bold;
+}
+
+.navbar {
+    background-color: var(--text-color);
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 650px;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: var(--background-color);
+    text-align: center;
+    padding: 14px 16px;
     text-decoration: none;
 }
 
-.p {
-    float: left;
-    text-align: left;
+.navbar .menu-text {
+    font-size: 11px;
 }
 
-.q {
-    float: right;
-    text-align: right;
+.navbar .owie-version {
+    color: var(--background-color);
+    text-align: center;
+    font-size: 11px;
+    margin-top: -10px;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
 }
 
-.r {
-    border-radius: 0.3em;
-    padding: 2px;
-    margin: 6px 2px;
-}
-
-.hf {
+/* Hide the link that should open and close the navbar on small screens */
+.navbar .icon {
     display: none;
 }
 
-.cell-voltages td {
-    padding: 2px;
-    background: #354b4d;
-    border: 0px;
-    border-radius: 0.2rem;
+/* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the navbar (.icon) */
+@media screen and (max-width: 200px) {
+    .navbar a:not(:first-child) {
+        display: none;
+    }
+
+    .navbar a.icon {
+        float: right;
+        display: block;
+    }
+    .navbar .active {
+        display: block !important;
+    }
 }
 
-h2 {
-    margin: 0;
-    padding: 0;
+/* The "responsive" class is added to the navbar with JavaScript when the user clicks on the icon. This class makes the navbar look good on small screens (display the links vertically instead of horizontally) */
+@media screen and (max-width: 200px) {
+    .navbar.responsive a.icon {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+
+    .navbar.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+}
+
+@media screen and (max-height: 450px) {
+    .navbar .menu-text {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    .navbar .menu-text {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 215px) {
+    .navbar .menu-text {
+        font-size: 9px;
+    }
+}
+
+@media screen and (max-width: 170px) {
+    .menu-text {
+        display: none
+    }
+}
+
+.navbar.responsive .active {
+    display: block;
+}
+
+.navbar.responsive .active .menu-text{
+    display: contents;
+}
+
+.navbar svg path {
+    fill: var(--background-color);
+}
+
+.navbar-icon {
+    height: 20px;
+    margin-bottom: -5px;
+}
+
+.navbar .settings {
+    display:none;
+    justify-content: space-around;
+}
+.navbar .default {
+    display: flex;
+    justify-content: space-around;
+}
+
+/* END BOTTOM NAV */
+
+.stat-container {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin: 0px;
+    padding: 6px 0px 0px 0px;
+    flex-flow: wrap;
+    font-size: 0.8em;
+    line-height: 1;
+}
+
+.stats-value {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.stats-value .value-text {
+    font-size: 1.2em;
+}
+
+/* END Test Stats List */
+
+/* Monitoring BMS */
+
+.monitor button {
+    width: 100%;
+    height: 40px;
+    background-color: var(--bar-color);
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: inherit;
+    border: 0px;
+    border-radius: 2px;
+}
+
+.monitor textarea {
+    width: 100%;
+    background-color: var(--background-color);
+    resize: vertical;
+    height: 318px;
+}
+/* Monitoring BMS End */
+
+.dev-wifi button {
+    width: 100%;
+    height: 40px;
+    background-color: var(--bar-color);
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: inherit;
+    border: 0px;
+    border-radius: 2px;
+}
+/* WiFi End */
+
+.board-locking.content {
+    margin-bottom: 21px;
+}
+
+.wifi-settings.content {
+    margin-bottom: 21px;
+}
+
+.firmware.content {
+    margin-bottom: 21px;
+}
+
+.battery-reset.button {
+    margin-bottom: 5px;
+}
+
+.box {
+    flex: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.startup {
+    position: absolute;
+    height: 100%;
+    visibility: visible;
+    background-color: var(--background-color);
+    max-width: 650px;
+    width: 100%;
+    z-index: 10;
+}
+
+.startup .content {
+    text-align: center;
+    margin-top: 50%;
+}
+
+.startup .content .loading-text {
+    font-weight: bold;
+}
+
+.startup.hide {
+    -webkit-animation: fadeOut 0.5s forwards;
+    -moz-animation: fadeOut 0.5s forwards;
+    animation: fadeOut 0.5s forwards;
+}
+
+/* Animations to fadeout the startup div */
+@-webkit-keyframes fadeOut { 0% { opacity: 1; visibility: visible;} 100% {opacity: 0; visibility: hidden;}}
+@-moz-keyframes fadeOut { 0% { opacity: 1; visibility: visible;} 100% {opacity: 0; visibility: hidden;}}
+@keyframes fadeOut { 0% { opacity: 1; visibility: visible;} 100% {opacity: 0; visibility: hidden;}}
+
+.battery-severity.error {
+    background-color: inherit !important;
+    color: #f44336;
+}
+.battery-severity.warning {
+    background-color: inherit !important;
+    color: rgb(202, 111, 7);
+}
+
+.divider {
+    border: 1px solid var(--text-color);
+    width: 100%;
+    opacity: 0.6;
+}
+/* every button class should have a pointer cursor */
+.button {
+    cursor: pointer;
 }

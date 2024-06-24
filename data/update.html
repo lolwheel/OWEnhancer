@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- The HTML markup is based on the main page of Tasmota -->
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
   <title>Owie - Firmware Update</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-
-<body>
-  <div style="text-align:left;display:inline-block;color:#eaeaea;min-width:340px;">
-    <div id="statusHeader" style="text-align:center;color:#eaeaea;margin-bottom:10px;">
-      <h2>Owie Update</h2>
+<body class="owie-app">
+  <div class="main">
+    <div class="settings content-container" style="display: block !important;">
+      <div class="wrapper">
+        <div class="firmware header">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="content-icon">
+            <path d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" />
+          </svg>
+          <span class="title">Firmware Update</span>
+        </div>
+        <div class="firmware content">
+          <div>
+            <form method="post" action="/update" enctype="multipart/form-data" style="background-color: inherit; height: 100%;">
+              <input id="fwUpdInput" type="file" name="firmware" accept=".bin,.bin.gz" style="font-size: large; margin-top: 30px; margin-bottom: 16px;">
+              <button type="submit" title="Start firmware update" style="cursor: pointer;">Start firmware update</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <form method="post" action="/update" enctype="multipart/form-data">
-      <fieldset>
-        <legend>Upload your firmware:</legend>
-        <input type="file" name="firmware" accept=".bin,.bin.gz" onchange="this.form.submit()">
-      </fieldset>
-      <hr>
-    </form>
-  </div>
 </body>
-
 </html>
